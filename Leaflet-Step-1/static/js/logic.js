@@ -1,6 +1,6 @@
 // Store our API endpoint as queryUrl
 
-var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_month.geojson"
+var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
 // Perform a GET request to the query URL
 d3.json(queryUrl, function (data) {
@@ -16,23 +16,24 @@ function createFeatures(earthquakeData) {
     };
 
     let earthquakes = L.geoJSON(earthquakeData, {
-        onEachFeature: processFeature
-        // pointToLayer: function (feature, latlng) {
-        //     return L.circleMarker(latlng, { radius: feature.properties.mag * 5, fillOpacity: 0.5, color: getColor(feature.properties.mag) });
-        // }
+        onEachFeature: processFeature,
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, { radius: feature.properties.mag * 5, fillOpacity: 0.5, color: getColor(feature.properties.mag) });
+        }
     });
 
     createMap(earthquakes);
 }
 
-// function getColor(d) {
-//     return d > 5 ? '#800026' :
-//         d > 4 ? '#BD0026' :
-//             d > 3 ? '#E31A1C' :
-//                 d > 2 ? '#FC4E2A' :
-//                     d > 1 ? '#FD8D3C' :
+function getColor(d) {
+    return d > 5 ? '#800026' :
+        d > 4 ? '#BD0026' :
+            d > 3 ? '#E31A1C' :
+                d > 2 ? '#FC4E2A' :
+                    d > 1 ? '#FD8D3C':
+                    '#FFEDA0';
        
-// }
+}
 
 
 
@@ -80,36 +81,36 @@ function createMap(earthquakes) {
 
 
 // // Loop through the earthquakes array
-earthquakes.forEach((earthquake) => {
-//     // Add circles to map
-    L.circle(earthquake.geometry.coordinates, {
-      fillOpacity: 0.75,
-      color: 'white',
-      // Conditionals for quakes
-      fillColor: quakeColor(earthquake.properties.mag),
-      // Adjust radius
-      radius: quakeRadius(earthquake.properties.mag)
-    })
-      .addTo(myMap);
-  });
+// earthquakes.forEach((earthquake) => {
+// //     // Add circles to map
+//     L.circle(earthquake.geometry.coordinates, {
+//       fillOpacity: 0.75,
+//       color: 'white',
+//       // Conditionals for quakes
+//       fillColor: quakeColor(earthquake.properties.mag),
+//       // Adjust radius
+//       radius: quakeRadius(earthquake.properties.mag)
+//     })
+//       .addTo(myMap);
+//   });
 
-  function quakeColor(magn) {
-    let color = 'red';
+//   function quakeColor(magn) {
+//     let color = 'red';
 
-    if (magn > 5) {
-      color = 'red';
-    } else if (magn > 4) {
-      color = 'blue';
-    } else if (magn > 3) {
-      color = 'green';
-    }
+//     if (magn > 5) {
+//       color = 'red';
+//     } else if (magn > 4) {
+//       color = 'blue';
+//     } else if (magn > 3) {
+//       color = 'green';
+//     }
 
-    return color;
-  }
+//     return color;
+//   }
 
-  function quakeRadius(magn) {
-    return magn * 1500;
-  }
+//   function quakeRadius(magn) {
+//     return magn * 1500;
+//   }
 
 
 
